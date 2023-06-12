@@ -1,0 +1,30 @@
+---
+# tasks file for myrole
+
+- name: install httpd and firewalld
+  yum:
+    name:
+      - httpd
+      - firewalld
+    state: latest
+- name: start and enable apache
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+- name: start and enable firewall
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+- name: add rule in firewalld
+  firewalld:
+    service: http
+    state: enabled
+    immediate: yes
+    permanent: yes
+- name: add content in index.html
+  template:
+    src: index.j2
+    dest: /var/www/html/index.html
+  notify: restart httpd  
